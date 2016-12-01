@@ -91,12 +91,51 @@ namespace LidtDBDemo
 
     }
 
+    static void SingleThread()
+    {
+
+      CodeTimer.Time("WriteWithOpenEverytime", 1, WriteWithOpenEverytime);
+      CodeTimer.Time("WriteWithOpenOnce", 1, WriteWithOpenOnce);
+
+    }
+
+    /// <summary>
+    /// Will throw exception.
+    /// </summary>
+    static void MulitpleThreads()
+    {
+
+      CodeTimer.Time("MulitpleThreads", 1, () =>
+      {
+
+        //Action[] actions = new Action[]
+        //{ 
+        //  WriteWithOpenEverytime, 
+        //  //WriteWithOpenOnce 
+        //};
+
+        //Task.Factory.ContinueWhenAll(actions.Select(d => Task.Factory.StartNew(d)).ToArray(), (tasks) =>
+        //{
+        //  Console.WriteLine("Finished");
+        //});
+
+        for (int i = 0; i < 5; i++)
+        {
+          
+          Task.Factory.StartNew(WriteWithOpenEverytime);
+
+        }
+
+      });
+
+    }
+
     static void Main(string[] args)
     {
 
-      //Task.Factory.StartNew(WriteWithOpenEverytime);
-      CodeTimer.Time("WriteWithOpenEverytime", 1, WriteWithOpenEverytime);
-      CodeTimer.Time("WriteWithOpenOnce", 1, WriteWithOpenOnce);
+      SingleThread();
+
+      MulitpleThreads();
 
       Console.ReadLine();
 
